@@ -1,0 +1,39 @@
+﻿@model Umbraco.Headless.Client.Net.Delivery.Models.Content
+
+@section TopNavInsert
+{
+    @{
+        var bannerImage = Model.Value<Image>("bannerImage");
+        var subheading = Model.Value<string>("subHeading");
+        var headline = Model.Value<string>("headline");
+    }
+    <div class="ck_slider_main_wrapper float_left">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 align-self-center d-none d-sm-none d-md-none d-lg-block d-xl-block">
+                    <div class="ck_main_slider_img float_left">
+                        <img src="@bannerImage.Url" alt="img">
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 align-self-center">
+                    <div class="ck_slider_top_content float_left">
+                        <h2>@subheading</h2>
+                        <h3>@Html.Raw(headline.Replace("\n", "<br />"))</h3>
+                        <ul>
+                            <li>
+                                @*<a href="#">@Umbraco.GetDictionaryValue("Home.ReadMore")</a>*@
+                            </li>
+                            <li>
+                                @*<a href="#page-shop">@Umbraco.GetDictionaryValue("Home.ShopNow")</a>*@
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    @*@{
+        Html.RenderPartial("Products");
+    }*@
