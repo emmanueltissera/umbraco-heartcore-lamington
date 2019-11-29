@@ -30,7 +30,7 @@ namespace LordLamington.Heartcore.Web.ViewComponents
             var navItems = children.Content.Items.Where(x => x.IsVisible())
                 .Select(item => new NavigationItem
                 {
-                    Title = item.Name, Url = item.Url, IsCurrent = item.Url == Request.Path.ToString()
+                    Title = item.Name, Url = item.Url.Replace("/home/","/"), IsCurrent = item.Url == Request.Path.ToString()
                 }).ToList();
 
             navItems.Insert(0, new NavigationItem { Title = rootContent.Name, Url = "/", IsCurrent = "/" == Request.Path.ToString() });

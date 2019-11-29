@@ -1,0 +1,53 @@
+﻿@using LordLamington.Heartcore.Web.Models.Grid
+@using Newtonsoft.Json.Linq
+@model Umbraco.Headless.Client.Net.Delivery.Models.Content
+
+@{ var bodyText = Model.Value<UmbracoGrid>("bodyText"); }
+
+@if (bodyText.Sections != null)
+{
+    <div class="umb-grid">
+        <div class="container">
+            <div class="row clearfix">
+                @foreach (var sectionPart in bodyText.Sections)
+                {
+                    <div class="grid-section">
+                        <div class="col-md-@sectionPart.Grid column">
+                            @foreach (var row in sectionPart.Rows)
+                            {
+                                <div class="row clearfix">
+                                    @foreach (var area in row.Areas)
+                                    {
+                                        <div class="col-md-@area.Grid column">
+                                            @foreach (var control in area.Controls)
+                                            {
+                                                var type = control.Editor.Name;
+                                                var columnClass = $"col-lg-{area.Grid}";
+                                                string content;
+                                                switch (type)
+                                                {
+                                                    case "Headline":
+                                                        content = control.Editor.Config.Markup.Replace("#value#", control.Value.ToString());
+                                                        break;
+                                                    case "Image":
+                                                        var image = control.Value as JObject;
+                                                        var source = image?.GetValue("image");
+                                                        content = $"<img src=\"https://media.umbraco.io/emmanuels-tidy-otter/{source}\" />";
+                                                        break;
+                                                    default:
+                                                        content = control.Value.ToString();
+                                                        break;
+                                                }
+                                                <text>@Html.Raw(content)</text>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

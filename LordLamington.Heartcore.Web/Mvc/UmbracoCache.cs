@@ -27,6 +27,7 @@ namespace LordLamington.Heartcore.Web.Mvc
         /// <returns></returns>
         public async Task<IContent> GetContentByUrl(string path)
         {
+            path = path.StartsWith("/home/") ? path : "/home" + path;
             var cacheKey = GetType().FullName;
             if (HttpContext.Items.TryGetValue(cacheKey, out var cache) == false)
             {
