@@ -1,12 +1,4 @@
-﻿@model IEnumerable<NavigationItem>
-@*@inherits Umbraco.Web.Mvc.UmbracoViewPage
-    @using Umbraco.Web
-
-    @{
-        var selection = Model.Root().Children.Where(x => x.IsVisible()).ToArray();
-        var homeName = Model.Root().Name;
-        var localeSettings = Model.Root().AncestorOrSelf<Home>();
-    }*@
+﻿@model NavigationViewModel
 
 <div class="et_top_header_wrapper float_left">
     <div class="container">
@@ -15,7 +7,7 @@
                 <div class="et_left_side_wrapper">
                     <div class="et_top_contect">
                         <p>
-                            @*<i class="fa fa-envelope"></i>  <a href="#">@localeSettings.LocaleEmailAddress</a>*@
+                            <i class="fa fa-envelope"></i>  <a href="#">@Model.Root.LocaleEmailAddress</a>
                         </p>
                     </div>
                 </div>
@@ -61,13 +53,13 @@
 <div class="ck_navigation_main_wrapper ck_navigation_inner_main_wrapper float_left">
     <div class="container">
         <div class="ck_menu_inner float_left">
-            @*@if (Model.ContentTypeAlias == "home")
-                {
-                    <div class="ck_top_life_effect"></div>
-                }*@
+            @if (Model.IsHomePage)
+            {
+                <div class="ck_top_life_effect"></div>
+            }
             <div class="ck_logo_wrapper ck_logo_wrapper_inner">
                 <a href="/">
-                    @*<img src="@localeSettings.LocaleLogo.Url" alt="@localeSettings.LocaleLogo.Name">*@
+                    <img src="@Model.Root.LocaleLogo.Url" alt="@Model.Root.LocaleLogo.Name">
                 </a>
             </div>
             <div class="ck_navigation_right_wrapper">
@@ -92,11 +84,10 @@
                         </div>
                         <div class="global-menu">
                             <div class="global-menu__wrap" id='cssmenu'>
-                                @if (Model.Any())
+                                @if (Model.NavigationItems.Any())
                                 {
                                     <ul>
-                                        @*<li><a class="global-menu__item global-menu__item--demo-3" href="/">@homeName</a></li>*@
-                                        @foreach (var item in Model)
+                                        @foreach (var item in Model.NavigationItems)
                                         {
                                             <li><a class="global-menu__item global-menu__item--demo-3" href="@item.Url">@item.Title</a></li>
                                         }
@@ -170,16 +161,15 @@
                     </div>
                 </div>
                 <div class="mainmenu d-xl-block d-lg-block d-md-block d-sm-none d-none">
-                    @if (Model.Any())
-                        {
-                            <ul class="main_nav_ul">
-                                @*<li class="has-mega gc_main_navigation"><a class="gc_main_navigation" href="/">@homeName</a></li>*@
-                                @foreach (var item in Model)
-                                {
-                                    <li class="has-mega gc_main_navigation"><a class="gc_main_navigation" href="@item.Url">@item.Title</a></li>
-                                }
-                            </ul>
-                        }
+                    @if (Model.NavigationItems.Any())
+                    {
+                        <ul class="main_nav_ul">
+                            @foreach (var item in Model.NavigationItems)
+                            {
+                                <li class="has-mega gc_main_navigation"><a class="gc_main_navigation" href="@item.Url">@item.Title</a></li>
+                            }
+                        </ul>
+                    }
                 </div>
             </div>
         </div>

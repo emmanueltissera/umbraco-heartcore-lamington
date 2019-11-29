@@ -24,6 +24,7 @@ namespace LordLamington.Heartcore.Web.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var rootContent = await _umbracoCache.GetContentByUrl("/");
+            var homeNode = new Home(rootContent);
             var children = await _contentDeliveryService.Content.GetChildren(rootContent.Id);
 
             var navItems = children.Content.Items.Where(x => x.IsVisible())
@@ -32,9 +33,16 @@ namespace LordLamington.Heartcore.Web.ViewComponents
                     Title = item.Name, Url = item.Url, IsCurrent = item.Url == Request.Path.ToString()
                 }).ToList();
 
-            navItems.Insert(0, new NavigationItem(){ Title = rootContent.Name, Url = "/", IsCurrent = "/" == Request.Path.ToString() });
+            navItems.Insert(0, new NavigationItem { Title = rootContent.Name, Url = "/", IsCurrent = "/" == Request.Path.ToString() });
 
-            return View(navItems);
+            var navViewModel = new NavigationViewModel()
+            {
+                IsHomePage = "/" == Request.Path.ToString(),
+                NavigationItems = navItems,
+                Root = homeNode
+            };
+
+            return View(navViewModel);
         }
     }
 }
