@@ -1,8 +1,6 @@
-﻿@model Umbraco.Headless.Client.Net.Delivery.Models.IContent
-@*@inherits Umbraco.Web.Mvc.UmbracoViewPage<LordLamington.Core.Interfaces.IGenericPage>
-    @{
-        var localeSettings = Model.Root().AncestorOrSelf<Home>();
-    }*@
+﻿@model Umbraco.Headless.Client.Net.Delivery.Models.Content
+@inject DictionaryService DictionaryService
+@inject SettingsService SettingsService
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
@@ -12,7 +10,7 @@
 
 <head>
     <meta charset="utf-8" />
-    @*<title>@string.Format(Umbraco.GetDictionaryValue("Master.PageTitleFormat"), Model.Title)</title>*@
+    <title>@string.Format(DictionaryService.Items["Master.PageTitleFormat"], Model.Value<string>("title"))</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="description" content="Lord Lamington" />
     <meta name="keywords" content="Lord Lamington" />
@@ -79,8 +77,8 @@
             <div class="ck_cll_left_wrapper">
                 <div class="ck_cll_icon align-self-center">
                     <i class="flaticon-phone-contact"></i>
-                    @*<h4>@Umbraco.GetDictionaryValue("Master.CallUs")</h4>*@
-                    @*<p>@localeSettings.LocalePhoneNumber</p>*@
+                    <h4>@DictionaryService.Items["Master.CallUs"]</h4>
+                    <p>@SettingsService.RootNode.LocalePhoneNumber</p>
                 </div>
                 <div class="ck_cll_img">
                     <img src="/images/lam-plate.png" alt="img">
@@ -88,8 +86,8 @@
             </div>
             <div class="ck_cll_right_wrapper">
                 <div class="cl_cll_form">
-                    @*<input type="text" placeholder="@Umbraco.GetDictionaryValue("Master.YourEmailPlaceholder")" autocomplete="off">
-                        <button>@Umbraco.GetDictionaryValue("Master.Subscribe")</button>*@
+                    <input type="text" placeholder="@DictionaryService.Items["Master.YourEmailPlaceholder"]" autocomplete="off">
+                    <button>@DictionaryService.Items["Master.Subscribe"]</button>
                 </div>
             </div>
         </div>
@@ -101,7 +99,7 @@
                 <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
                     <div class="btm_foter_box">
                         <p>
-                            @*@string.Format(Umbraco.GetDictionaryValue("Master.CopyrightStatement"), DateTime.Now.Year)*@
+                            @string.Format(DictionaryService.Items["Master.CopyrightStatement"], DateTime.Now.Year)
                         </p>
                     </div>
                 </div>

@@ -8,7 +8,7 @@ namespace LordLamington.Heartcore.Web.Models
 {
     public class ProductCollectionViewModel
     {
-        private const string ContentTypeAlias = "productCollection";
+        public const string ContentTypeAlias = "productCollection";
         private readonly Content _content;
 
         public ProductCollectionViewModel(IContent content, PagedContent pagedContent, bool isCollectionPage = false)
@@ -30,5 +30,7 @@ namespace LordLamington.Heartcore.Web.Models
         public string SubTitle => _content.Value<string>("subTitle");
 
         public bool IsCollectionPage { get; set; }
+
+        public string Url => _content.Url;
     }
 }

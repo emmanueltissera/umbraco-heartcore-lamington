@@ -1,4 +1,5 @@
 ﻿@model ProductCollectionViewModel
+@inject DictionaryService DictionaryService
 
 <div class="ck_bc_main_wrapper float_left" id="page-shop">
     <div class="container">
@@ -28,7 +29,7 @@
                             <h3>@product.Title</h3>
                             @product.Description
                             <div class="ck_bc_btn float_left">
-                                @*<a href="#">@Umbraco.GetDictionaryValue("Products.AddToCart")</a>*@
+                                <a href="#">@DictionaryService.Items["Products.AddToCart"]</a>
                             </div>
                         </div>
                     </div>
@@ -39,7 +40,7 @@
             {
                 <div class="col-md-12">
                     <div class="ck_new_btn ck_new_btn_bc">
-                        @*<a href="@productCollection.Url">@Umbraco.GetDictionaryValue("Products.ShopMore")</a>*@
+                        <a href="@Model.Url.ToSafeUrl()">@DictionaryService.Items["Products.ShopMore"]</a>
                     </div>
                 </div>
             }

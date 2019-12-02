@@ -25,7 +25,7 @@ namespace LordLamington.Heartcore.Web.ViewComponents
             var isCollectionPage = true;
             if (productRoot == null)
             {
-                var productRootPaged = await _contentDeliveryService.Content.GetByType("productCollection");
+                var productRootPaged = await _contentDeliveryService.Content.GetByType(ProductCollectionViewModel.ContentTypeAlias);
                 productRoot = productRootPaged.Content.Items.FirstOrDefault();
                 isCollectionPage = false;
             }

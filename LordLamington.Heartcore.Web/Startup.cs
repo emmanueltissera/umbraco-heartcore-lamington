@@ -1,4 +1,5 @@
 ﻿using LordLamington.Heartcore.Web.Mvc;
+using LordLamington.Heartcore.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +40,9 @@ namespace LordLamington.Heartcore.Web
             services.AddUmbracoHeadlessContentDelivery(projectAlias, apiKey);
 
             services.AddUmbracoHeadlessWebEngine();
+
+            services.AddScoped<DictionaryService>();
+            services.AddScoped<SettingsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
