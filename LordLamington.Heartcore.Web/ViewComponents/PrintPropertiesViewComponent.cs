@@ -12,6 +12,8 @@ namespace LordLamington.Heartcore.Web.ViewComponents
         {
             var sb = new StringBuilder("<div style=\"display: grid; grid-template-columns: auto 1fr; grid-gap: 20px;\">");
 
+            sb.Append($"<h4>ContentTypeAlias: {content.ContentTypeAlias}</h4>");
+
             foreach (var property in content.Properties)
             {
                 sb.Append("<div>");

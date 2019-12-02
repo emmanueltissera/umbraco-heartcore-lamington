@@ -1,14 +1,20 @@
-﻿using LordLamington.Heartcore.Web.Extensions;
+﻿using System;
+using LordLamington.Heartcore.Web.Extensions;
 using Umbraco.Headless.Client.Net.Delivery.Models;
 
 namespace LordLamington.Heartcore.Web.Models
 {
     public class Home
     {
+        private const string ContentTypeAlias = "home";
         private readonly Content _content;
 
         public Home(IContent content)
         {
+            if (content.ContentTypeAlias != ContentTypeAlias)
+            {
+                throw new TypeLoadException($"Expected {ContentTypeAlias}. Got {content.ContentTypeAlias}");
+            }
             _content = content as Content;
         }
 

@@ -6,7 +6,6 @@ using LordLamington.Heartcore.Web.Models;
 using LordLamington.Heartcore.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Umbraco.Headless.Client.Net.Delivery;
-using LordLamington.Heartcore.Web.Extensions;
 
 namespace LordLamington.Heartcore.Web.ViewComponents
 {

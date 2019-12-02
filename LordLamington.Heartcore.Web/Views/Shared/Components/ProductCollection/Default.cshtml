@@ -1,0 +1,48 @@
+﻿@model ProductCollectionViewModel
+
+<div class="ck_bc_main_wrapper float_left" id="page-shop">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="ck_heading_new_center_wrapper float_left">
+                    <h4>@Model.SubTitle</h4>
+                    <h3>@Model.Title</h3>
+                </div>
+            </div>
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                    <div class="ck_elem_slide_img_wrapper float_left">
+                        <div class="ck_elem_slide_img float_left">
+                            <img src="@product.Image.Url" alt="img">
+                            <h5>$ @product.Price</h5>
+                        </div>
+                        <div class="ck_elem_slide_img_cont float_left">
+                            <div class="ck_elem_star">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h3>@product.Title</h3>
+                            @product.Description
+                            <div class="ck_bc_btn float_left">
+                                @*<a href="#">@Umbraco.GetDictionaryValue("Products.AddToCart")</a>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!Model.IsCollectionPage)
+            {
+                <div class="col-md-12">
+                    <div class="ck_new_btn ck_new_btn_bc">
+                        @*<a href="@productCollection.Url">@Umbraco.GetDictionaryValue("Products.ShopMore")</a>*@
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
