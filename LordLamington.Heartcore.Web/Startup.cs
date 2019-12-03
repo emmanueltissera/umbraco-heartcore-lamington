@@ -35,13 +35,6 @@ namespace LordLamington.Heartcore.Web
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.Configure<ProjectOptions>(Configuration);
-
-            //var umbracoConfig = Configuration.GetSection("umbraco");
-            //var projectAlias = umbracoConfig.GetValue<string>("projectAlias");
-            //var apiKey = umbracoConfig.GetValue<string>("apiKey");
-
-            //services.AddUmbracoHeadlessContentDelivery(projectAlias, apiKey);
-
             var umbracoConfig = new UmbracoConfig();
             Configuration.GetSection(nameof(UmbracoConfig)).Bind(umbracoConfig);
 
