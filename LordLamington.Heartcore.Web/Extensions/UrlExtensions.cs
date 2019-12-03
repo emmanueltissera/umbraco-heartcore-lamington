@@ -4,7 +4,8 @@ namespace LordLamington.Heartcore.Web.Extensions
     {
         public static string ToSafeUrl(this string url)
         {
-            return url.Replace("/home/","/");
+            return url;
+            //return url.Replace("/home/","/");
         }
     }
 }

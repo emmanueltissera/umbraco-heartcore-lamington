@@ -29,5 +29,10 @@ namespace LordLamington.Heartcore.Web.Models
         public Image LocaleLogo => _content.Value<Image>("localeLogo");
 
         public string LocalePhoneNumber => _content.Value<string>("localePhoneNumber");
+
+        public string Title => _content.Value<string>("title");
+
+        public string Url => _content.Url;
+
     }
 }

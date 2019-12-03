@@ -1,3 +1,4 @@
+using LordLamington.Heartcore.Web.Config;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Umbraco.Headless.Client.Net.Configuration;
@@ -14,6 +15,15 @@ namespace LordLamington.Heartcore.Web.Mvc
             services.TryAddSingleton(string.IsNullOrEmpty(apiKey)
                 ? new ContentDeliveryService(projectAlias)
                 : new ContentDeliveryService(projectAlias, apiKey));
+            return services;
+        }
+
+        public static IServiceCollection AddUmbracoHeadlessContentDelivery(this IServiceCollection services,
+            UmbracoConfig umbracoConfig)
+        {
+            services.TryAddSingleton(string.IsNullOrEmpty(umbracoConfig.ApiKey)
+                ? new ContentDeliveryService(umbracoConfig.ProjectAlias)
+                : new ContentDeliveryService(umbracoConfig.ProjectAlias, umbracoConfig.ApiKey));
             return services;
         }
 

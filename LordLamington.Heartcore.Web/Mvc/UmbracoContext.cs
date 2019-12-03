@@ -17,6 +17,8 @@ namespace LordLamington.Heartcore.Web.Mvc
         public UmbracoCache Cache { get; }
         public IContent Content { get; private set; }
 
+        public string Language { get; private set; }
+
         internal async Task<bool> RouteUmbracoContentAsync(HttpContext context)
         {
             var url = context?.Request?.Path.Value;
@@ -25,7 +27,8 @@ namespace LordLamington.Heartcore.Web.Mvc
 
             try
             {
-                var content = await Cache.GetContentByUrl(url);
+                Language = url.StartsWith("/sinhala/") ? "si-LK" : "en-AU";
+                var content = await Cache.GetContentByUrl(url, Language);
                 Content = content;
                 return content != null;
             }

@@ -4,20 +4,17 @@ using System.Threading.Tasks;
 using LordLamington.Heartcore.Web.Models;
 using LordLamington.Heartcore.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
-using Umbraco.Headless.Client.Net.Delivery;
 using Umbraco.Headless.Client.Net.Delivery.Models;
 
 namespace LordLamington.Heartcore.Web.ViewComponents
 {
     public class ProductCollectionViewComponent : ViewComponent
     {
-        private readonly ContentDeliveryService _contentDeliveryService;
-        private readonly UmbracoCache _umbracoCache;
+        private readonly UmbracoContext _umbracoContext;
 
-        public ProductCollectionViewComponent(ContentDeliveryService contentDeliveryService, UmbracoCache umbracoCache)
+        public ProductCollectionViewComponent(UmbracoContext umbracoContext)
         {
-            _contentDeliveryService = contentDeliveryService ?? throw new ArgumentNullException(nameof(contentDeliveryService));
-            _umbracoCache = umbracoCache ?? throw new ArgumentNullException(nameof(umbracoCache));
+            _umbracoContext = umbracoContext ?? throw new ArgumentNullException(nameof(umbracoContext));
         }
 
         public async Task<IViewComponentResult> InvokeAsync(Content productRoot = null)
@@ -25,7 +22,7 @@ namespace LordLamington.Heartcore.Web.ViewComponents
             var isCollectionPage = true;
             if (productRoot == null)
             {
-                var productRootPaged = await _contentDeliveryService.Content.GetByType(ProductCollectionViewModel.ContentTypeAlias);
+                var productRootPaged = await _umbracoContext.Cache.GetByType(ProductCollectionViewModel.ContentTypeAlias, _umbracoContext.Language);
                 productRoot = productRootPaged.Content.Items.FirstOrDefault();
                 isCollectionPage = false;
             }
@@ -35,7 +32,7 @@ namespace LordLamington.Heartcore.Web.ViewComponents
                 throw new Exception("Product Root is null");
             }
 
-            var children = await _contentDeliveryService.Content.GetChildren(productRoot.Id);
+            var children = await _umbracoContext.Cache.GetChildren(productRoot.Id, _umbracoContext.Language);
             var productRootNode = new ProductCollectionViewModel(productRoot, children, isCollectionPage);
 
             return View(productRootNode);

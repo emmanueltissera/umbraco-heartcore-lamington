@@ -1,4 +1,5 @@
-﻿using LordLamington.Heartcore.Web.Mvc;
+﻿using LordLamington.Heartcore.Web.Config;
+using LordLamington.Heartcore.Web.Mvc;
 using LordLamington.Heartcore.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,11 +34,18 @@ namespace LordLamington.Heartcore.Web
                 .AddMvcOptions(opt => opt.EnableEndpointRouting = false)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var umbracoConfig = Configuration.GetSection("umbraco");
-            var projectAlias = umbracoConfig.GetValue<string>("projectAlias");
-            var apiKey = umbracoConfig.GetValue<string>("apiKey");
+            services.Configure<ProjectOptions>(Configuration);
 
-            services.AddUmbracoHeadlessContentDelivery(projectAlias, apiKey);
+            //var umbracoConfig = Configuration.GetSection("umbraco");
+            //var projectAlias = umbracoConfig.GetValue<string>("projectAlias");
+            //var apiKey = umbracoConfig.GetValue<string>("apiKey");
+
+            //services.AddUmbracoHeadlessContentDelivery(projectAlias, apiKey);
+
+            var umbracoConfig = new UmbracoConfig();
+            Configuration.GetSection(nameof(UmbracoConfig)).Bind(umbracoConfig);
+
+            services.AddUmbracoHeadlessContentDelivery(umbracoConfig);
 
             services.AddUmbracoHeadlessWebEngine();
 

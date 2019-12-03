@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Umbraco.Headless.Client.Net.Delivery;
 using Umbraco.Headless.Client.Net.Delivery.Models;
 
@@ -10,38 +10,97 @@ namespace LordLamington.Heartcore.Web.Mvc
     public sealed class UmbracoCache
     {
         private readonly ContentDeliveryService _contentDelivery;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMemoryCache _memoryCache;
 
-        public UmbracoCache(ContentDeliveryService contentDelivery, IHttpContextAccessor httpContextAccessor)
+        public UmbracoCache(ContentDeliveryService contentDelivery, IMemoryCache memoryCache)
         {
             _contentDelivery = contentDelivery ?? throw new ArgumentNullException(nameof(contentDelivery));
-            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _memoryCache = memoryCache;
         }
-
-        private HttpContext HttpContext => _httpContextAccessor.HttpContext;
-
+        
         /// <summary>
         /// Gets an <see cref="IContent"/> object for a given URL and caches it for the current request
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="culture"></param>
         /// <returns></returns>
-        public async Task<IContent> GetContentByUrl(string path)
+        public async Task<IContent> GetContentByUrl(string path, string culture)
         {
-            path = path.StartsWith("/home/") ? path : "/home" + path;
-            var cacheKey = GetType().FullName;
-            if (HttpContext.Items.TryGetValue(cacheKey, out var cache) == false)
-            {
-                HttpContext.Items[cacheKey] = cache = new Dictionary<string, IContent>();
-            }
+            var urlCache = GetIContentCacheContainer();
 
-            var urlCache = (Dictionary<string, IContent>) cache;
-
-            if (urlCache.TryGetValue(path, out var content) == false)
+            var contentCacheKey = path + "|" + culture;
+            if (urlCache.TryGetValue(contentCacheKey, out var content) == false)
             {
-                urlCache[path] = content = await _contentDelivery.Content.GetByUrl(path);
+                urlCache[contentCacheKey] = content = await _contentDelivery.Content.GetByUrl(path, culture);
             }
 
             return content;
+        }
+
+
+        public async Task<IContent> GetContentById(Guid id, string culture)
+        {
+            var urlCache = GetIContentCacheContainer();
+
+            var contentCacheKey = id + "|" + culture;
+            if (urlCache.TryGetValue(contentCacheKey, out var content) == false)
+            {
+                urlCache[contentCacheKey] = content = await _contentDelivery.Content.GetById(id, culture);
+            }
+
+            return content;
+        }
+
+        public async Task<PagedContent> GetByType(string contentType, string culture = null, int page = 1, int pageSize = 10)
+        {
+            var urlCache = GetPagedContentCacheContainer();
+
+            var contentCacheKey = contentType + "|" + culture + "|" + page + "|" + pageSize;
+            if (urlCache.TryGetValue(contentCacheKey, out var pagedContent) == false)
+            {
+                urlCache[contentCacheKey] = pagedContent = await _contentDelivery.Content.GetByType(contentType, culture, page, pageSize);
+            }
+
+            return pagedContent;
+        }
+
+        public async Task<PagedContent> GetChildren(Guid id, string culture = null, int page = 1, int pageSize = 10)
+        {
+            var urlCache = GetPagedContentCacheContainer();
+
+            var contentCacheKey = id + "|" + culture + "|" + page + "|" + pageSize;
+            if (urlCache.TryGetValue(contentCacheKey, out var pagedContent) == false)
+            {
+                urlCache[contentCacheKey] = pagedContent = await _contentDelivery.Content.GetChildren(id, culture, page, pageSize);
+            }
+
+            return pagedContent;
+        }
+
+        private Dictionary<string, IContent> GetIContentCacheContainer()
+        {
+            var cacheKey = GetType().FullName + "|" + "IContent";
+            if (_memoryCache.TryGetValue(cacheKey, out var cache) == false)
+            {
+                cache = new Dictionary<string, IContent>();
+                _memoryCache.Set(cacheKey, cache);
+            }
+
+            var urlCache = (Dictionary<string, IContent>) cache;
+            return urlCache;
+        }
+
+        private Dictionary<string, PagedContent> GetPagedContentCacheContainer()
+        {
+            var cacheKey = GetType().FullName + "|" + "PagedContent";
+            if (_memoryCache.TryGetValue(cacheKey, out var cache) == false)
+            {
+                cache = new Dictionary<string, PagedContent>();
+                _memoryCache.Set(cacheKey, cache);
+            }
+
+            var urlCache = (Dictionary<string, PagedContent>) cache;
+            return urlCache;
         }
     }
 }

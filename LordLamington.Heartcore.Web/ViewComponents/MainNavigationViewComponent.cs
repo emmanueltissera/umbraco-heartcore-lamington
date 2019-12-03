@@ -5,26 +5,23 @@ using LordLamington.Heartcore.Web.Extensions;
 using LordLamington.Heartcore.Web.Models;
 using LordLamington.Heartcore.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
-using Umbraco.Headless.Client.Net.Delivery;
 
 namespace LordLamington.Heartcore.Web.ViewComponents
 {
     public class MainNavigationViewComponent : ViewComponent
     {
-        private readonly ContentDeliveryService _contentDeliveryService;
-        private readonly UmbracoCache _umbracoCache;
+        private readonly UmbracoContext _umbracoContext;
 
-        public MainNavigationViewComponent(ContentDeliveryService contentDeliveryService, UmbracoCache umbracoCache)
+        public MainNavigationViewComponent(UmbracoContext umbracoContext)
         {
-            _contentDeliveryService = contentDeliveryService ?? throw new ArgumentNullException(nameof(contentDeliveryService));
-            _umbracoCache = umbracoCache ?? throw new ArgumentNullException(nameof(umbracoCache));
+            _umbracoContext = umbracoContext ?? throw new ArgumentNullException(nameof(umbracoContext));
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var rootContent = await _umbracoCache.GetContentByUrl("/");
+            var rootContent = await _umbracoContext.Cache.GetContentByUrl("/", _umbracoContext.Language);
             var homeNode = new Home(rootContent);
-            var children = await _contentDeliveryService.Content.GetChildren(rootContent.Id);
+            var children = await _umbracoContext.Cache.GetChildren(rootContent.Id, _umbracoContext.Language);
 
             var navItems = children.Content.Items.Where(x => x.IsVisible())
                 .Select(item => new NavigationItem
@@ -32,11 +29,11 @@ namespace LordLamington.Heartcore.Web.ViewComponents
                     Title = item.Name, Url = item.Url.ToSafeUrl(), IsCurrent = item.Url == Request.Path.ToString()
                 }).ToList();
 
-            navItems.Insert(0, new NavigationItem { Title = rootContent.Name, Url = "/", IsCurrent = "/" == Request.Path.ToString() });
+            navItems.Insert(0, new NavigationItem { Title = homeNode.Title, Url = rootContent.Url, IsCurrent = rootContent.Url == Request.Path.ToString() });
 
             var navViewModel = new NavigationViewModel()
             {
-                IsHomePage = "/" == Request.Path.ToString(),
+                IsHomePage = rootContent.Url == Request.Path.ToString(),
                 NavigationItems = navItems,
                 Root = homeNode
             };

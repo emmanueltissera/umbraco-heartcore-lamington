@@ -1,4 +1,5 @@
 ﻿@model NavigationViewModel
+@inject DictionaryService DictionaryService
 
 <div class="et_top_header_wrapper float_left">
     <div class="container">
@@ -31,14 +32,14 @@
                                         <li>
                                             <a href="#"><i class="fab fa-instagram"></i></a>
                                         </li>
-                                        @*@foreach (var culture in Model.Cultures.Keys)
-                                            {
-                                                <li>
-                                                    <a href="@Model.Url(culture, UrlMode.Absolute)">
-                                                        @Umbraco.GetDictionaryValue($"Cultures.{culture}", culture)
-                                                    </a>
-                                                </li>
-                                            }*@
+                                        @foreach (var culture in DictionaryService.Languages)
+                                        {
+                                            <li>
+                                                <a href="@culture.Value">
+                                                    @culture.Key
+                                                </a>
+                                            </li>
+                                        }
                                     </ul>
                                 </div>
                             </li>
@@ -58,7 +59,7 @@
                 <div class="ck_top_life_effect"></div>
             }
             <div class="ck_logo_wrapper ck_logo_wrapper_inner">
-                <a href="/">
+                <a href="@Model.Root.Url">
                     <img src="@Model.Root.LocaleLogo.Url" alt="@Model.Root.LocaleLogo.Name">
                 </a>
             </div>

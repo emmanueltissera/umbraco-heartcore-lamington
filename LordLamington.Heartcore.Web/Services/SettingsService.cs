@@ -2,25 +2,22 @@ using System;
 using System.Threading.Tasks;
 using LordLamington.Heartcore.Web.Models;
 using LordLamington.Heartcore.Web.Mvc;
-using Umbraco.Headless.Client.Net.Delivery;
 
 namespace LordLamington.Heartcore.Web.Services
 {
     public class SettingsService
     {
-        private readonly ContentDeliveryService _contentDeliveryService;
-        private readonly UmbracoCache _umbracoCache;
+        private readonly UmbracoContext _umbracoContext;
 
-        public SettingsService(ContentDeliveryService contentDeliveryService, UmbracoCache umbracoCache)
+        public SettingsService(UmbracoContext umbracoContext)
         {
-            _contentDeliveryService = contentDeliveryService ?? throw new ArgumentNullException(nameof(contentDeliveryService));
-            _umbracoCache = umbracoCache ?? throw new ArgumentNullException(nameof(umbracoCache));
+            _umbracoContext = umbracoContext ?? throw new ArgumentNullException(nameof(umbracoContext));
             RootNode = GetHomeNode().Result;
         }
 
         private async Task<Home> GetHomeNode()
         {
-            var rootContent = await _umbracoCache.GetContentByUrl("/");
+            var rootContent = await _umbracoContext.Cache.GetContentByUrl("/", _umbracoContext.Language);
             return new Home(rootContent);
         }
 
