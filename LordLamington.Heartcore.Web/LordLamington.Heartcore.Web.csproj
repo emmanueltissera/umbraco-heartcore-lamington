@@ -13,4 +13,9 @@
     <PackageReference Include="Umbraco.Headless.Client.Net" Version="1.0.0.29753" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\display\" />
+  </ItemGroup>
+
 </Project>
