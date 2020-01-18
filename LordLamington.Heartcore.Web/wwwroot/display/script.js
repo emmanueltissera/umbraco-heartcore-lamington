@@ -79,6 +79,7 @@ function resetCarousel() {
     $('.carousel-item').remove();
     $('.carousel-indicators > li').remove();
     $('#carouselSlideContainer').carousel('dispose');
+    $('#carouselSlideContainer').carousel({ pause: false });
 }
 
 function createSlide(item) {
